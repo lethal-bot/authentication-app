@@ -6,6 +6,7 @@ const router = new express.Router();
 
 router.post('/users/login', async (req, res) => {
     try {
+        console.log(req.body);
         const user = await User.findByCredentials(req.body.email, req.body.password);
         if (!user.isVerified) return res.status(401).send({ message: "not verified" });
         const token = await user.generateAuthToken()
@@ -39,6 +40,8 @@ router.post('/users', async (req, res) => {
 
 router.post('/verify/otp', async (req, res) => {
     try {
+        console.log(req.body.email);
+
         const user = await User.findOne({ email: req.body.email })
         console.log(user);
         if (!user) res.status(404).send(e);
@@ -84,6 +87,10 @@ router.get('/users/logout', auth, async (req, res) => {
     } catch (e) {
         res.status(500).send()
     }
+})
+
+router.get('/users/me', auth, async (req, res) => {
+    res.send(req.user);
 })
 
 module.exports = router;
