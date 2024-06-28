@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useState } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 import { Box, Button, Typography, Container } from '@mui/material';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -44,6 +44,7 @@ export default function Home() {
       });
 
       localStorage.removeItem("token");
+      localStorage.removeItem("email");
       setUserData({ name: "" });
 
       const data = await res.json();
@@ -66,55 +67,58 @@ export default function Home() {
         <Typography variant="h3" component="h1" gutterBottom>
           Welcome
         </Typography>
-
-        {userData.name.length !== 0 ? (
-          <>
-            <Typography variant="h6" component="h2" gutterBottom>
-              {userData.name}
-            </Typography>
-            <Box mt={4} width="100%">
-              <Button
-                variant="contained"
-                color="primary"
-                fullWidth
-                size="large"
-                sx={{ marginBottom: 2 }}
-                onClick={logout}
-              >
-                Logout
-              </Button>
-            </Box>
-          </>
-        ) : (
-          <>
-            <Typography variant="h6" component="h2" gutterBottom>
-              Please login or sign up to continue
-            </Typography>
-            <Box mt={4} width="100%">
-              <Link href="/login" passHref>
+        <Suspense fallback={<Typography variant="h6" component="h2" gutterBottom>
+          Loadingg...
+        </Typography>}>
+          {userData.name.length !== 0 ? (
+            <>
+              <Typography variant="h6" component="h2" gutterBottom>
+                {userData.name}
+              </Typography>
+              <Box mt={4} width="100%">
                 <Button
                   variant="contained"
                   color="primary"
                   fullWidth
                   size="large"
                   sx={{ marginBottom: 2 }}
+                  onClick={logout}
                 >
-                  Login
+                  Logout
                 </Button>
-              </Link>
-              <Link href="/register" passHref>
-                <Button
-                  variant="outlined"
-                  color="primary"
-                  fullWidth
-                  size="large"
-                >
-                  Sign Up
-                </Button>
-              </Link>
-            </Box>
-          </>
-        )}
+              </Box>
+            </>
+          ) : (
+            <>
+              <Typography variant="h6" component="h2" gutterBottom>
+                Please login or sign up to continue
+              </Typography>
+              <Box mt={4} width="100%">
+                <Link href="/login" passHref>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    fullWidth
+                    size="large"
+                    sx={{ marginBottom: 2 }}
+                  >
+                    Login
+                  </Button>
+                </Link>
+                <Link href="/register" passHref>
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    fullWidth
+                    size="large"
+                  >
+                    Sign Up
+                  </Button>
+                </Link>
+              </Box>
+            </>
+          )}
+        </Suspense>
       </Box>
     </Container>
   );

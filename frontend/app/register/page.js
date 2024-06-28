@@ -18,7 +18,7 @@ export default function Register() {
         if (state.message === 'ok') {
             console.log(state.email);
             localStorage.setItem("email", state.email);
-            router.push('/otp'); // Redirect to homepage or desired route
+            router.push('/otp');
         }
     }, [state.message])
     return (
